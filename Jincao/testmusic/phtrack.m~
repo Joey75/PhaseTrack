@@ -1,0 +1,45 @@
+%subtrac_test
+
+csiref=squeeze(chr(6000,:,:));
+Rref=smoothCSI(csiref);
+[pref,vref]=mymusic(Rref);
+peakref=max(max(abs(pref)))
+[iiref,jjref]=find(peakref==abs(pref))
+%%
+%%draw music spetrum
+% [xx, yy]=meshgrid(tao,phs_deg);
+% figure
+% mesh(xx,yy,10*log10(abs(Pref)))
+% drawnow
+%%
+
+for ind=1:length(chr)
+    
+    tmpcsi=squeeze(csi{ind}.csi);
+    R=smoothCSI(tmpcsi);
+    [p,v]=mymusic(R);
+    peak(ind)=max(max(abs(p)))
+    [ii(ind),jj(ind)]=find(peak(ind)==abs(p))
+
+    pdd=jj-jjref;
+    alfa1=2*pi*(pdd/100/300)*(40/29);
+
+    sfo=(0:29)*(alfa1);
+    sfocsi(1,:)=tmpcsi(1,:).*exp(j*v);
+    sfocsi(2,:)=tmpcsi(2,:).*exp(j*v);
+    sfocsi(3,:)=tmpcsi(3,:).*exp(j*v);
+
+    %ifft domain
+    ifftcsi(ind,:,:)=ifft(tmpcsi.');
+    iffttmp(ind,:,:)=ifft(sfocsi.');
+end
+% figure
+% plot(phase(ifftcsi(:,1)))
+% hold on
+% plot(phase(iffttmp(:,1)))
+% 
+% figure
+% plot(abs(ifftcsi(:,3)))
+% hold on
+% plot(abs(iffttmp(:,3)))
+
